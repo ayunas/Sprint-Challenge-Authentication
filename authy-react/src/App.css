@@ -1,0 +1,22 @@
+html {
+  font-size : 62.5%;
+}
+
+body {
+  font-size : 1.6rem;
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.App {
+  border : 10px solid #282c34;
+  padding: 10px;
+}
