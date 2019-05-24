@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
+const secrets = require('../config/secrets');
 
-const jwtKey =
-  process.env.JWT_SECRET ||
-  "the secret is the key to the kingdom";
+const jwtKey = secrets.JWT_SECRET;
 
 // quickly see what this file exports
 module.exports = {
