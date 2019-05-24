@@ -10,8 +10,11 @@ function register(newUser) {
   return db("users").insert(newUser);
 }
 
-function login(user) {
-  db("users").where({ username: user.username });
+function login(username) {
+  console.log(username);
+  db("users")
+    .where({ username: username })
+    .first()
 }
 
 function getUsers() {

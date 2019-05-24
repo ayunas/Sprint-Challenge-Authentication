@@ -1,13 +1,14 @@
 const axios = require("axios");
 const bcrypt = require("bcryptjs");
 const dbHelper = require("../database/dbHelper");
-// const db = require("../database/dbConfig");
+const db = require("../database/dbConfig");
+const jwt = require("jsonwebtoken");
 
 const { authenticate } = require("../auth/authenticate");
 
 module.exports = server => {
   server.post("/api/register", register);
-  server.post("/api/login", login);
+  server.post("/api/login", authenticate, login);
   // server.get('/api/jokes', authenticate, getJokes);
   server.get("/api/jokes", authenticate, getJokes);
   server.get("/api/users", getUsers);
@@ -20,8 +21,17 @@ function register(req, res) {
 
   dbHelper
     .register(newUser)
-    .then(response => {
-      res.status(200).json(response);
+    .then(id => {
+      // const token = generateToken(response)
+      console.log("userid", id);
+      db("users").where({ id: id[0] }).first()
+        .then(user => {
+          const token = generateToken(user);
+          res.status(201).json({ user: user.username, token: token });
+        })
+        .catch(err => {
+          res.status(500).json(err.message);
+        })
     })
     .catch(err => {
       res.status(500).json(err.message);
@@ -29,9 +39,37 @@ function register(req, res) {
 }
 
 function login(req, res) {
-  const user = req.body;
+  const username = req.body.username;
+  const password = req.body.password;
 
-  dbHelper.login(user);
+  db("users")
+    .where({ username: username })
+    .first()
+    .then(user => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        const token = generateToken(user);
+        res.status(200).json({ message: `Welcome ${user.username}`, token: token });
+      }
+
+    })
+    .catch(err => {
+      res.status(500).json(err.message);
+    });
+
+  // dbHelper
+  //   .login(username)
+  //   .then(user => {
+  //     if (!user) {
+  //       res
+  //         .status(404)
+  //         .json({ message: `${user.username} not found in the database` });
+  //     } else {
+  //       res.status(200).json(user);
+  //     }
+  //   })
+  //   .catch(err => {
+  //     res.status(500).json(err.message);
+  //   });
 }
 
 function getJokes(req, res) {
@@ -58,4 +96,20 @@ function getUsers(req, res) {
     .catch(err => {
       res.status(500).json(err.message);
     });
+}
+
+function generateToken(user) {
+
+  const payload = {
+    subject: user.id,
+    username: user.username
+  }
+
+  const secret = "the secret is the key to the kingdom"
+
+  const options = {
+    expiresIn: "1hr"
+  }
+
+  return jwt.sign(payload, secret, options)
 }
