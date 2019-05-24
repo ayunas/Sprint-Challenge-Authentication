@@ -12,7 +12,7 @@ function register(newUser) {
 
 function login(username) {
   console.log(username);
-  db("users")
+  return db("users")
     .where({ username: username })
     .first()
 }
@@ -20,3 +20,4 @@ function login(username) {
 function getUsers() {
   return db("users").select("*");
 }
+

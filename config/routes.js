@@ -42,34 +42,35 @@ function login(req, res) {
   const username = req.body.username;
   const password = req.body.password;
 
-  db("users")
-    .where({ username: username })
-    .first()
-    .then(user => {
-      if (user && bcrypt.compareSync(password, user.password)) {
-        const token = generateToken(user);
-        res.status(200).json({ message: `Welcome ${user.username}`, token: token });
-      }
-
-    })
-    .catch(err => {
-      res.status(500).json(err.message);
-    });
-
-  // dbHelper
-  //   .login(username)
+  // db("users")
+  //   .where({ username: username })
+  //   .first()
   //   .then(user => {
-  //     if (!user) {
-  //       res
-  //         .status(404)
-  //         .json({ message: `${user.username} not found in the database` });
-  //     } else {
-  //       res.status(200).json(user);
+  //     if (user && bcrypt.compareSync(password, user.password)) {
+  //       const token = generateToken(user);
+  //       res.status(200).json({ message: `Welcome ${user.username}`, token: token });
   //     }
+
   //   })
   //   .catch(err => {
   //     res.status(500).json(err.message);
   //   });
+
+  dbHelper
+    .login(username)
+    .then(user => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        const token = generateToken(user);
+        res.status(200).json({ message: `Welcome ${user.username}`, token: token });
+      } else {
+        res
+          .status(404)
+          .json({ message: `${user.username} not found in the database` });
+      }
+    })
+    .catch(err => {
+      res.status(500).json(err.message);
+    });
 }
 
 function getJokes(req, res) {
