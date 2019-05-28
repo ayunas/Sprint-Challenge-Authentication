@@ -28,10 +28,16 @@ Implement an User Authentication System in order to access the jokes from the Jo
 
 Demonstrate your understanding of this week's concepts by answering the following free-form questions. Edit this document to include your answers after each question. Make sure to leave a blank line above and below your answer so it is clear and easy to read by your project manager.
 
-1. What is the purpose of using _sessions_?
-1. What does bcrypt do to help us store passwords in a secure manner.
-1. What does bcrypt do to slow down attackers?
-1. What are the three parts of the JSON Web Token?
+1.  <strong>What is the purpose of using _sessions_? </strong>
+    Sessions allow a authorized user entrance into the the endpoint of the app.  They last for a temporary time, and while they are valid, come with a cookie which acts as the key to the endpoint.  When the session expires, the cookie is no longer valid.  
+
+2.  <strong>What does bcrypt do to help us store passwords in a secure manner.</strong>
+    bcrypt is an npm library that allows passwords to undergo hashing, which is an irreversible type of encoding.  (ref: "https://hackercombat.com/forum/network-security/whats-the-difference-between-encoding-encryption-and-hashing/").  The bcrypt method hashSync( ), allows you to pass in a string, and in the 2nd argument specify the number of rounds to perform the "hashing".  The higher the number, the longer it takes to perform the hashing.  This makes it more resistant to hackers attempting to crack passwords.  
+
+3.  <strong>What does bcrypt do to slow down attackers? </strong> Answered in previous question.
+
+4.  <strong>What are the three parts of the JSON Web Token?</strong>
+    A JSON Web Token, or JWT has three parts.  The header, the payload, and the signature.  The header is an object that specifies the hashing algorithm as well as the type of token.  In this case, the type would be JWT.  The payload contains the actual data being stored in the JWT.  The signature is like a password to the JWT.  It is the secret phrase to unlock the JWT.   As Sean Pheneger puts it, "the secret is the keys to the kingdom."  
 
 ## Project Set Up
 
